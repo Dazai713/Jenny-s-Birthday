@@ -311,38 +311,100 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 50px;
   }
   .cake-stage.slide-in {
     transform: translateY(0);
   }
 
-  /* Custom CSS Birthday Cake */
-  .cake {
-    position: relative;
-    width: 220px;
-    height: 130px;
-    background: #fbcfe8;
-    border-radius: 20px 20px 10px 10px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), inset 0 -12px 0 #f472b6;
-    display: flex;
-    justify-content: center;
+  /* Cake Board Stand */
+  .cake-board {
+    position: absolute;
+    bottom: -15px;
+    width: 280px;
+    height: 18px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 1;
   }
 
-  .cake-top {
+  /* Custom Cinnamoroll Vintage Cake */
+  .cake {
+    position: relative;
+    width: 240px;
+    height: 160px;
+    background: linear-gradient(180deg, #bae6fd 0%, #7dd3fc 100%);
+    border-radius: 30px 30px 15px 15px;
+    box-shadow: inset 0 -10px 0 #38bdf8, 0 15px 35px rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  /* Top Piped Shell Frosting */
+  .cake-top-piping {
     position: absolute;
-    top: -25px;
+    top: -12px;
+    width: 252px;
+    height: 24px;
+    background: repeating-linear-gradient(90deg, #e0f2fe, #e0f2fe 18px, #bae6fd 18px, #bae6fd 36px);
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Bottom Piped Shell Frosting */
+  .cake-bottom-piping {
+    position: absolute;
+    bottom: -10px;
+    width: 252px;
+    height: 22px;
+    background: repeating-linear-gradient(90deg, #e0f2fe, #e0f2fe 18px, #bae6fd 18px, #bae6fd 36px);
+    border-radius: 20px;
+  }
+
+  /* White Frill Garland Decor */
+  .cake-frill {
+    position: absolute;
+    top: 55px;
     width: 240px;
     height: 35px;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: radial-gradient(circle at 20px 0, transparent 18px, #ffffff 19px);
+    background-size: 40px 40px;
+    filter: drop-shadow(0 3px 2px rgba(56, 189, 248, 0.4));
+  }
+
+  /* Swag Ribbons & Bows */
+  .cake-bows {
+    position: absolute;
+    top: 40px;
+    width: 220px;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .bow {
+    color: #38bdf8;
+    font-size: 1.3rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+
+  /* Cinnamoroll Cake Topper */
+  .cinnamoroll-topper {
+    position: absolute;
+    top: -95px;
+    width: 100px;
+    height: 90px;
+    object-fit: contain;
+    z-index: 5;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
   }
 
   /* Candles Layout */
   .candles-container {
     position: absolute;
-    top: -65px;
-    width: 160px;
+    top: -55px;
+    width: 180px;
     display: flex;
     justify-content: space-between;
     z-index: 10;
@@ -350,9 +412,9 @@
 
   .candle {
     position: relative;
-    width: 16px;
-    height: 45px;
-    background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+    width: 14px;
+    height: 48px;
+    background: linear-gradient(180deg, #f472b6 0%, #db2777 100%);
     border-radius: 4px;
     cursor: pointer;
     display: flex;
@@ -498,8 +560,19 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
   <div class="cake-overlay" id="cakeOverlay">
     <div class="cake-banner" id="cakeBanner">WAIT, it cant be a birthday without a cake! 🎂✨</div>
     <div class="cake-stage" id="cakeStage">
+      <!-- Cinnamoroll Topper -->
+      <img class="cinnamoroll-topper" src="Cinnamoroll.webp?v=2" alt="Cinnamoroll Topper">
+
       <div class="cake">
-        <div class="cake-top"></div>
+        <div class="cake-top-piping"></div>
+        <div class="cake-bows">
+          <span class="bow">🎀</span>
+          <span class="bow">🎀</span>
+          <span class="bow">🎀</span>
+        </div>
+        <div class="cake-frill"></div>
+        <div class="cake-bottom-piping"></div>
+
         <div class="candles-container">
           <div class="candle" onclick="blowCandle(this)">
             <div class="wick"></div>
@@ -515,6 +588,8 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
           </div>
         </div>
       </div>
+
+      <div class="cake-board"></div>
     </div>
 
     <!-- Make a Wish Modal -->
@@ -705,4 +780,3 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
   </script>
 </body>
 </html>
-
