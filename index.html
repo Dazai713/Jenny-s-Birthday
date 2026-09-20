@@ -97,89 +97,6 @@
     z-index: 10;
   }
 
-  /* --- FIXED MOBILE PEEK POSITIONING --- */
-  .enderman-wrapper {
-    position: fixed;
-    left: 0;
-    top: 35%;
-    z-index: 99;
-    pointer-events: auto;
-    cursor: pointer;
-    /* Pushed completely off-screen to the left (-100%) and rotated 90deg */
-    transform: translateX(-100%) rotate(90deg);
-    transform-origin: top left;
-    transition: transform 7s linear, opacity 0.2s ease;
-  }
-
-  /* Slides out by exactly 100% of its size (head width) over 7 seconds */
-  .enderman-wrapper.peek-in {
-    transform: translateX(0%) rotate(90deg);
-  }
-
-  .enderman-wrapper.teleport-out {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  /* Head Design (128px x 112px) */
-  .ender-head {
-    width: 128px;
-    height: 112px;
-    background: #0d0d12;
-    border: 4px solid #1a1a24;
-    position: relative;
-    box-shadow: inset 0 0 20px #000000;
-  }
-
-  /* Glowing Eyes */
-  .ender-eyes {
-    position: absolute;
-    top: 48px;
-    right: 4px;
-    display: flex;
-    gap: 24px;
-  }
-
-  .ender-eye {
-    width: 40px;
-    height: 10px;
-    background: #cc44ff;
-    box-shadow: 0 0 16px #cc44ff, 0 0 25px #e056fd;
-    position: relative;
-  }
-
-  .ender-eye::after {
-    content: '';
-    position: absolute;
-    left: 12px;
-    top: 0;
-    width: 16px;
-    height: 10px;
-    background: #ffffff;
-  }
-
-  /* Ender Floating Particles */
-  .ender-particle-box {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-
-  .p-ender {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: #e056fd;
-    box-shadow: 0 0 12px #cc44ff;
-    animation: enderFloat 2s infinite ease-out;
-  }
-
-  @keyframes enderFloat {
-    0% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-60px) scale(0.2); }
-  }
-
   /* Main Card Frame */
   .card-frame {
     z-index: 10;
@@ -347,6 +264,182 @@
     0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
     100% { opacity: 0; transform: translateY(-140px) scale(1.6) rotate(80deg); }
   }
+
+  /* --- CAKE EVENT OVERLAY --- */
+  .cake-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .cake-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .cake-banner {
+    font-family: 'Fredoka One', cursive;
+    color: #ffffff;
+    font-size: 1.8rem;
+    text-align: center;
+    text-shadow: 0 4px 15px rgba(244, 114, 182, 0.8);
+    margin-bottom: 25px;
+    padding: 0 20px;
+    animation: bounceText 1s infinite alternate ease-in-out;
+  }
+
+  @keyframes bounceText {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-8px); }
+  }
+
+  /* Slide-in Animated Cake Container */
+  .cake-stage {
+    position: relative;
+    transform: translateY(100vh);
+    transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .cake-stage.slide-in {
+    transform: translateY(0);
+  }
+
+  /* Custom CSS Birthday Cake */
+  .cake {
+    position: relative;
+    width: 220px;
+    height: 130px;
+    background: #fbcfe8;
+    border-radius: 20px 20px 10px 10px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), inset 0 -12px 0 #f472b6;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cake-top {
+    position: absolute;
+    top: -25px;
+    width: 240px;
+    height: 35px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Candles Layout */
+  .candles-container {
+    position: absolute;
+    top: -65px;
+    width: 160px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+  }
+
+  .candle {
+    position: relative;
+    width: 16px;
+    height: 45px;
+    background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wick {
+    position: absolute;
+    top: -8px;
+    width: 3px;
+    height: 8px;
+    background: #475569;
+  }
+
+  .flame {
+    position: absolute;
+    top: -22px;
+    width: 14px;
+    height: 18px;
+    background: #f97316;
+    border-radius: 50% 50% 20% 20%;
+    box-shadow: 0 0 12px #facc15;
+    animation: flicker 0.6s infinite alternate;
+  }
+
+  @keyframes flicker {
+    0% { transform: scale(1) rotate(-2deg); opacity: 1; }
+    100% { transform: scale(1.15) rotate(2deg); opacity: 0.85; }
+  }
+
+  /* Smoke Animation */
+  .smoke {
+    position: absolute;
+    top: -25px;
+    width: 10px;
+    height: 10px;
+    background: rgba(226, 232, 240, 0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: smokePuff 1.2s ease-out forwards;
+  }
+
+  @keyframes smokePuff {
+    0% { opacity: 0.9; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-45px) scale(3); }
+  }
+
+  /* Wish Notification Box */
+  .wish-modal {
+    display: none;
+    margin-top: 30px;
+    background: #ffffff;
+    border: 4px solid #f472b6;
+    border-radius: 25px;
+    padding: 20px 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .wish-modal h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #db2777;
+    margin-bottom: 8px;
+  }
+
+  .wish-modal button {
+    margin-top: 15px;
+    background: #38bdf8;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+    transition: transform 0.2s ease;
+  }
+  .wish-modal button:active {
+    transform: scale(0.95);
+  }
 </style>
 </head>
 <body>
@@ -359,21 +452,6 @@
   <!-- Cloud Backgrounds -->
   <div class="cloud cloud1"></div>
   <div class="cloud cloud2"></div>
-
-  <!-- 90° Rotated Enderman Head -->
-  <div class="enderman-wrapper" id="enderman" onclick="teleportEnderman(true)">
-    <div class="ender-head">
-      <div class="ender-eyes">
-        <div class="ender-eye"></div>
-        <div class="ender-eye"></div>
-      </div>
-    </div>
-    <div class="ender-particle-box">
-      <div class="p-ender" style="top: 10px; left: -15px; animation-delay: 0.1s;"></div>
-      <div class="p-ender" style="top: 70px; left: 40px; animation-delay: 0.7s;"></div>
-      <div class="p-ender" style="top: -20px; left: 20px; animation-delay: 1.3s;"></div>
-    </div>
-  </div>
 
   <!-- Card Container -->
   <div class="card-container">
@@ -414,6 +492,37 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
 
     </div>
 
+  </div>
+
+  <!-- Cake Event Overlay -->
+  <div class="cake-overlay" id="cakeOverlay">
+    <div class="cake-banner" id="cakeBanner">WAIT, it cant be a birthday without a cake! 🎂✨</div>
+    <div class="cake-stage" id="cakeStage">
+      <div class="cake">
+        <div class="cake-top"></div>
+        <div class="candles-container">
+          <div class="candle" onclick="blowCandle(this)">
+            <div class="wick"></div>
+            <div class="flame"></div>
+          </div>
+          <div class="candle" onclick="blowCandle(this)">
+            <div class="wick"></div>
+            <div class="flame"></div>
+          </div>
+          <div class="candle" onclick="blowCandle(this)">
+            <div class="wick"></div>
+            <div class="flame"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Make a Wish Modal -->
+    <div class="wish-modal" id="wishModal">
+      <h2>✨ Make a Wish! ✨</h2>
+      <p style="color: #475569; font-weight: 600;">Close your eyes and make a special birthday wish! 💖</p>
+      <button onclick="closeCakeOverlay()">i hate you, Dazai. Shut up and let me read the letter</button>
+    </div>
   </div>
 
   <script>
@@ -534,7 +643,7 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
     }
 
     function launchConfetti() {
-      const symbols = ['🎉', '☁️', '🎂', '💙', '✨', '🧁', '🎈', '💖', '💜', '🟩'];
+      const symbols = ['🎉', '☁️', '🎂', '💙', '✨', '🧁', '🎈', '💖', '💜', '🎀'];
       for (let i = 0; i < 32; i++) {
         setTimeout(() => {
           const particle = document.createElement('div');
@@ -549,113 +658,51 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
       }
     }
 
-    // --- TIMEOUT FOR EXACT 9-SECOND DELAY ---
-    let endermanTeleported = false;
+    /* --- 20-SECOND CAKE INTERACTION LOGIC --- */
+    let candlesLit = 3;
 
-    // Starts counting 9 seconds immediately after page load
-    window.addEventListener('load', () => {
+    setTimeout(() => {
+      const overlay = document.getElementById('cakeOverlay');
+      const stage = document.getElementById('cakeStage');
+
+      overlay.classList.add('active');
+
       setTimeout(() => {
-        if (!endermanTeleported) {
-          const enderEl = document.getElementById('enderman');
-          enderEl.classList.add('peek-in');
+        stage.classList.add('slide-in');
+      }, 300);
+    }, 20000);
 
-          // Auto teleport out after completing full 7s peek + brief pause
+    function blowCandle(candleEl) {
+      const flame = candleEl.querySelector('.flame');
+      if (flame && flame.style.display !== 'none') {
+        flame.style.display = 'none';
+
+        // Spawn smoke puff
+        for (let i = 0; i < 3; i++) {
+          const smoke = document.createElement('div');
+          smoke.className = 'smoke';
+          smoke.style.left = `${Math.random() * 6 - 3}px`;
+          candleEl.appendChild(smoke);
+          setTimeout(() => smoke.remove(), 1200);
+        }
+
+        candlesLit--;
+
+        if (candlesLit === 0) {
           setTimeout(() => {
-            if (!endermanTeleported) {
-              teleportEnderman(false);
-            }
-          }, 8500);
+            document.getElementById('cakeBanner').style.display = 'none';
+            document.getElementById('wishModal').style.display = 'block';
+            launchConfetti();
+          }, 600);
         }
-      }, 9000);
-    });
-
-    // Realistic Enderman Teleport Sound Effect (https://youtu.be/2D-HQKultvg)
-    function playTeleportSound() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = ctx.currentTime;
-
-        const osc1 = ctx.createOscillator();
-        const osc2 = ctx.createOscillator();
-        const gainOsc = ctx.createGain();
-
-        osc1.type = 'sawtooth';
-        osc2.type = 'square';
-
-        osc1.frequency.setValueAtTime(800, now);
-        osc1.frequency.exponentialRampToValueAtTime(120, now + 0.15);
-        osc1.frequency.exponentialRampToValueAtTime(500, now + 0.40);
-
-        osc2.frequency.setValueAtTime(400, now);
-        osc2.frequency.exponentialRampToValueAtTime(90, now + 0.15);
-        osc2.frequency.exponentialRampToValueAtTime(250, now + 0.40);
-
-        gainOsc.gain.setValueAtTime(0.35, now);
-        gainOsc.gain.exponentialRampToValueAtTime(0.001, now + 0.40);
-
-        osc1.connect(gainOsc);
-        osc2.connect(gainOsc);
-        gainOsc.connect(ctx.destination);
-
-        osc1.start(now);
-        osc2.start(now);
-        osc1.stop(now + 0.40);
-        osc2.stop(now + 0.40);
-
-        // Noise Burst
-        const bufferSize = ctx.sampleRate * 0.35;
-        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          output[i] = Math.random() * 2 - 1;
-        }
-
-        const whiteNoise = ctx.createBufferSource();
-        whiteNoise.buffer = noiseBuffer;
-
-        const noiseFilter = ctx.createBiquadFilter();
-        noiseFilter.type = 'bandpass';
-        noiseFilter.frequency.setValueAtTime(1200, now);
-        noiseFilter.Q.setValueAtTime(3, now);
-
-        const noiseGain = ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.25, now);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-
-        whiteNoise.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(ctx.destination);
-
-        whiteNoise.start(now);
-        whiteNoise.stop(now + 0.35);
-
-      } catch (e) {
-        // Fallback for audio restriction
       }
     }
 
-    function teleportEnderman(userClicked) {
-      if (endermanTeleported) return;
-      endermanTeleported = true;
-
-      const enderEl = document.getElementById('enderman');
-      playTeleportSound();
-
-      // Burst of purple Ender particles
-      const rect = enderEl.getBoundingClientRect();
-      for (let i = 0; i < 25; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        p.innerText = '✨';
-        p.style.left = `${rect.left + Math.random() * 80}px`;
-        p.style.top = `${rect.top + Math.random() * 80}px`;
-        p.style.fontSize = '20px';
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 1000);
-      }
-
-      enderEl.classList.add('teleport-out');
+    function closeCakeOverlay() {
+      const overlay = document.getElementById('cakeOverlay');
+      overlay.classList.remove('active');
     }
   </script>
 </body>
 </html>
+
