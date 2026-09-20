@@ -86,7 +86,7 @@
     transform: scale(0.95);
   }
 
-  /* Container Wrapper for Card & Enderman */
+  /* Main Card Container */
   .card-container {
     position: relative;
     max-width: 440px;
@@ -97,74 +97,105 @@
     z-index: 10;
   }
 
-  /* Minecraft Peeking Enderman */
-  .enderman {
-    position: absolute;
-    right: 12px;
-    top: 100px;
-    width: 70px;
-    height: 160px;
-    background: #121212;
-    z-index: 5; /* Behind card-frame */
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
-    animation: peekEnderman 7s infinite ease-in-out;
-    cursor: pointer;
-  }
-
-  /* Enderman Head Details */
-  .enderman-eyes {
-    position: absolute;
-    top: 25px;
-    left: 8px;
+  /* --- MINECRAFT ENDERMAN CHARACTER --- */
+  .enderman-wrapper {
+    position: fixed;
+    left: -80px; /* Hidden off left screen edge */
+    bottom: 20%;
+    z-index: 99;
     display: flex;
-    gap: 18px;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 3.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
   }
 
-  .enderman-eye {
-    width: 16px;
+  .enderman-wrapper.peek-in {
+    transform: translateX(110px); /* Peeks onto screen */
+  }
+
+  .enderman-wrapper.teleport-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Head */
+  .ender-head {
+    width: 60px;
+    height: 50px;
+    background: #0f0f14;
+    border: 2px solid #1a1a24;
+    position: relative;
+    box-shadow: inset 0 0 8px #000000;
+  }
+
+  /* Glowing Eyes */
+  .ender-eyes {
+    position: absolute;
+    top: 22px;
+    right: 4px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .ender-eye {
+    width: 18px;
     height: 5px;
-    background: #e056fd;
-    box-shadow: 0 0 8px #d63031, 0 0 12px #e056fd;
+    background: #cc44ff;
+    box-shadow: 0 0 10px #d63031, 0 0 14px #e056fd;
     position: relative;
   }
 
-  .enderman-eye::after {
+  .ender-eye::after {
     content: '';
     position: absolute;
-    left: 4px;
+    left: 5px;
     top: 0;
     width: 8px;
     height: 5px;
     background: #ffffff;
   }
 
-  /* Ender Particles */
-  .ender-particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: #e056fd;
-    box-shadow: 0 0 6px #e056fd;
-    animation: enderFloat 2.5s infinite ease-out;
+  /* Body & Skinny Arms */
+  .ender-body {
+    width: 35px;
+    height: 110px;
+    background: #111116;
+    position: relative;
+    margin-right: 5px;
   }
-  .ep1 { top: 15px; left: -5px; animation-delay: 0.2s; }
-  .ep2 { top: 60px; left: 15px; animation-delay: 0.9s; }
-  .ep3 { top: 110px; left: -8px; animation-delay: 1.6s; }
 
-  @keyframes peekEnderman {
-    0%, 100% {
-      transform: translateX(0); /* Hidden behind card */
-    }
-    35%, 65% {
-      transform: translateX(48px); /* Peeks out from behind right side */
-    }
+  .ender-arm {
+    position: absolute;
+    width: 8px;
+    height: 160px;
+    background: #0a0a0f;
+    right: -2px;
+    top: 0;
+    border-radius: 2px;
+  }
+
+  /* Ender Particles */
+  .ender-particle-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .p-ender {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #e056fd;
+    box-shadow: 0 0 8px #cc44ff;
+    animation: enderFloat 2s infinite ease-out;
   }
 
   @keyframes enderFloat {
     0% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-30px) scale(0.3); }
+    100% { opacity: 0; transform: translateY(-40px) scale(0.2); }
   }
 
   /* Main Card Frame */
@@ -347,19 +378,26 @@
   <div class="cloud cloud1"></div>
   <div class="cloud cloud2"></div>
 
-  <!-- Main Outer Container -->
-  <div class="card-container">
-
-    <!-- Minecraft Enderman Peeking -->
-    <div class="enderman" title="Shhh... an Enderman is peeking! 👾">
-      <div class="enderman-eyes">
-        <div class="enderman-eye"></div>
-        <div class="enderman-eye"></div>
+  <!-- Enderman Character Peeking from Left -->
+  <div class="enderman-wrapper" id="enderman" onclick="teleportEnderman(true)">
+    <div class="ender-head">
+      <div class="ender-eyes">
+        <div class="ender-eye"></div>
+        <div class="ender-eye"></div>
       </div>
-      <div class="ender-particle ep1"></div>
-      <div class="ender-particle ep2"></div>
-      <div class="ender-particle ep3"></div>
     </div>
+    <div class="ender-body">
+      <div class="ender-arm"></div>
+    </div>
+    <div class="ender-particle-box">
+      <div class="p-ender" style="top: 10px; left: -10px; animation-delay: 0.1s;"></div>
+      <div class="p-ender" style="top: 70px; left: 15px; animation-delay: 0.6s;"></div>
+      <div class="p-ender" style="top: 120px; left: -5px; animation-delay: 1.2s;"></div>
+    </div>
+  </div>
+
+  <!-- Card Container Container -->
+  <div class="card-container">
 
     <!-- Card Container Frame -->
     <div class="card-frame">
@@ -530,6 +568,74 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
           setTimeout(() => particle.remove(), 3500);
         }, i * 45);
       }
+    }
+
+    // --- ENDERMAN TIMING & TELEPORT SFX ---
+    let endermanTeleported = false;
+
+    // Trigger peek 9 seconds after webpage loads
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (!endermanTeleported) {
+          const enderEl = document.getElementById('enderman');
+          enderEl.classList.add('peek-in');
+
+          // Vanish with teleport sound 4.5s after peeking
+          setTimeout(() => {
+            if (!endermanTeleported) {
+              teleportEnderman(false);
+            }
+          }, 4500);
+        }
+      }, 9000);
+    });
+
+    function playTeleportSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sawtooth';
+        
+        // Pitch sweep mimicking Minecraft Enderman teleport
+        osc.frequency.setValueAtTime(280, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.35);
+
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } catch (e) {
+        // Fallback if audio context isn't allowed without user click
+      }
+    }
+
+    function teleportEnderman(userClicked) {
+      if (endermanTeleported) return;
+      endermanTeleported = true;
+
+      const enderEl = document.getElementById('enderman');
+      playTeleportSound();
+
+      // Spawn burst of purple Ender particles
+      const rect = enderEl.getBoundingClientRect();
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.innerText = '✨';
+        p.style.left = `${rect.left + Math.random() * 60}px`;
+        p.style.top = `${rect.top + Math.random() * 100}px`;
+        p.style.fontSize = '16px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
+      }
+
+      enderEl.classList.add('teleport-out');
     }
   </script>
 </body>
