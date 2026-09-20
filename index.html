@@ -97,24 +97,25 @@
     z-index: 10;
   }
 
-  /* --- 2X LARGER ROTATED ENDERMAN HEAD --- */
+  /* --- 90-DEGREE TILTED ENDERMAN HEAD (LIMITED PEEK) --- */
   .enderman-wrapper {
     position: fixed;
-    left: -140px; /* Completely hidden off left screen */
+    /* Head is 128px wide. Placed completely off-screen at -128px */
+    left: -128px;
     top: 35%;
     z-index: 99;
     pointer-events: auto;
     cursor: pointer;
-    /* Initial state: tilted head */
-    transform: rotate(42deg);
-    transform-origin: bottom left;
-    transition: left 7s linear, transform 7s linear, opacity 0.2s ease;
+    /* Full 90 Degree Rotation */
+    transform: rotate(90deg);
+    transform-origin: bottom right;
+    /* Slow 7-second linear peek */
+    transition: left 7s linear, opacity 0.2s ease;
   }
 
-  /* Slow 7-second peek to full view */
+  /* Peeks out up to exact head size limit (left: 0px) */
   .enderman-wrapper.peek-in {
-    left: 20px; /* Moves onto screen over 7 full seconds */
-    transform: rotate(28deg); /* Slightly straightens while staying tilted */
+    left: 0px; 
   }
 
   .enderman-wrapper.teleport-out {
@@ -122,7 +123,7 @@
     pointer-events: none;
   }
 
-  /* Head Design (Doubled 2x to 128px x 112px) */
+  /* Head Design (128px x 112px) */
   .ender-head {
     width: 128px;
     height: 112px;
@@ -132,7 +133,7 @@
     box-shadow: inset 0 0 20px #000000;
   }
 
-  /* 2x Glowing Eyes */
+  /* Glowing Eyes */
   .ender-eyes {
     position: absolute;
     top: 48px;
@@ -361,7 +362,7 @@
   <div class="cloud cloud1"></div>
   <div class="cloud cloud2"></div>
 
-  <!-- Enderman Head Only (2x Size, Rotated) -->
+  <!-- 90° Rotated Enderman Head -->
   <div class="enderman-wrapper" id="enderman" onclick="teleportEnderman(true)">
     <div class="ender-head">
       <div class="ender-eyes">
@@ -550,62 +551,89 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
       }
     }
 
-    // --- ENDERMAN TIMING & CLASSIC TELEPORT SFX ---
+    // --- EXACT 9-SECOND TRIGGER & CLASSIC ENDERMAN SFX ---
     let endermanTeleported = false;
 
-    // Trigger peek 9 seconds after webpage loads
     window.addEventListener('load', () => {
+      // Exactly 9 seconds after opening website
       setTimeout(() => {
         if (!endermanTeleported) {
           const enderEl = document.getElementById('enderman');
           enderEl.classList.add('peek-in');
 
-          // Teleport out 2 seconds after completing the full 7s peek
+          // Auto teleport out after completing full 7s peek + brief pause
           setTimeout(() => {
             if (!endermanTeleported) {
               teleportEnderman(false);
             }
-          }, 9000);
+          }, 8500);
         }
       }, 9000);
     });
 
-    // Realistic Minecraft Enderman Teleport Sound Synthesizer
+    // Authentic Enderman Teleport Sound Synthesizer (https://youtu.be/2D-HQKultvg)
     function playTeleportSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        
+        const now = ctx.currentTime;
+
+        // Layer 1: Metallic Pitch-Sweep Oscillators
         const osc1 = ctx.createOscillator();
         const osc2 = ctx.createOscillator();
-        const gain = ctx.createGain();
+        const gainOsc = ctx.createGain();
 
         osc1.type = 'sawtooth';
         osc2.type = 'square';
 
-        const now = ctx.currentTime;
+        osc1.frequency.setValueAtTime(800, now);
+        osc1.frequency.exponentialRampToValueAtTime(120, now + 0.15);
+        osc1.frequency.exponentialRampToValueAtTime(500, now + 0.40);
 
-        // Classic Enderman pitch sweep modulation
-        osc1.frequency.setValueAtTime(650, now);
-        osc1.frequency.exponentialRampToValueAtTime(140, now + 0.18);
-        osc1.frequency.exponentialRampToValueAtTime(450, now + 0.45);
+        osc2.frequency.setValueAtTime(400, now);
+        osc2.frequency.exponentialRampToValueAtTime(90, now + 0.15);
+        osc2.frequency.exponentialRampToValueAtTime(250, now + 0.40);
 
-        osc2.frequency.setValueAtTime(320, now);
-        osc2.frequency.exponentialRampToValueAtTime(80, now + 0.18);
-        osc2.frequency.exponentialRampToValueAtTime(220, now + 0.45);
+        gainOsc.gain.setValueAtTime(0.35, now);
+        gainOsc.gain.exponentialRampToValueAtTime(0.001, now + 0.40);
 
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-
-        osc1.connect(gain);
-        osc2.connect(gain);
-        gain.connect(ctx.destination);
+        osc1.connect(gainOsc);
+        osc2.connect(gainOsc);
+        gainOsc.connect(ctx.destination);
 
         osc1.start(now);
         osc2.start(now);
-        osc1.stop(now + 0.45);
-        osc2.stop(now + 0.45);
+        osc1.stop(now + 0.40);
+        osc2.stop(now + 0.40);
+
+        // Layer 2: White Noise Burst for Teleport Static
+        const bufferSize = ctx.sampleRate * 0.35;
+        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = ctx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+
+        const noiseFilter = ctx.createBiquadFilter();
+        noiseFilter.type = 'bandpass';
+        noiseFilter.frequency.setValueAtTime(1200, now);
+        noiseFilter.Q.setValueAtTime(3, now);
+
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.25, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        whiteNoise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(ctx.destination);
+
+        whiteNoise.start(now);
+        whiteNoise.stop(now + 0.35);
+
       } catch (e) {
-        // Fallback for audio restriction
+        // Fallback for strict audio policies
       }
     }
 
