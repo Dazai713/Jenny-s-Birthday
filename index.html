@@ -97,25 +97,23 @@
     z-index: 10;
   }
 
-  /* --- 90-DEGREE TILTED ENDERMAN HEAD (LIMITED PEEK) --- */
+  /* --- FIXED MOBILE PEEK POSITIONING --- */
   .enderman-wrapper {
     position: fixed;
-    /* Head is 128px wide. Placed completely off-screen at -128px */
-    left: -128px;
+    left: 0;
     top: 35%;
     z-index: 99;
     pointer-events: auto;
     cursor: pointer;
-    /* Full 90 Degree Rotation */
-    transform: rotate(90deg);
-    transform-origin: bottom right;
-    /* Slow 7-second linear peek */
-    transition: left 7s linear, opacity 0.2s ease;
+    /* Pushed completely off-screen to the left (-100%) and rotated 90deg */
+    transform: translateX(-100%) rotate(90deg);
+    transform-origin: top left;
+    transition: transform 7s linear, opacity 0.2s ease;
   }
 
-  /* Peeks out up to exact head size limit (left: 0px) */
+  /* Slides out by exactly 100% of its size (head width) over 7 seconds */
   .enderman-wrapper.peek-in {
-    left: 0px; 
+    transform: translateX(0%) rotate(90deg);
   }
 
   .enderman-wrapper.teleport-out {
@@ -551,11 +549,11 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
       }
     }
 
-    // --- EXACT 9-SECOND TRIGGER & CLASSIC ENDERMAN SFX ---
+    // --- TIMEOUT FOR EXACT 9-SECOND DELAY ---
     let endermanTeleported = false;
 
+    // Starts counting 9 seconds immediately after page load
     window.addEventListener('load', () => {
-      // Exactly 9 seconds after opening website
       setTimeout(() => {
         if (!endermanTeleported) {
           const enderEl = document.getElementById('enderman');
@@ -571,13 +569,12 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
       }, 9000);
     });
 
-    // Authentic Enderman Teleport Sound Synthesizer (https://youtu.be/2D-HQKultvg)
+    // Realistic Enderman Teleport Sound Effect (https://youtu.be/2D-HQKultvg)
     function playTeleportSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const now = ctx.currentTime;
 
-        // Layer 1: Metallic Pitch-Sweep Oscillators
         const osc1 = ctx.createOscillator();
         const osc2 = ctx.createOscillator();
         const gainOsc = ctx.createGain();
@@ -605,7 +602,7 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
         osc1.stop(now + 0.40);
         osc2.stop(now + 0.40);
 
-        // Layer 2: White Noise Burst for Teleport Static
+        // Noise Burst
         const bufferSize = ctx.sampleRate * 0.35;
         const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
@@ -633,7 +630,7 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
         whiteNoise.stop(now + 0.35);
 
       } catch (e) {
-        // Fallback for strict audio policies
+        // Fallback for audio restriction
       }
     }
 
