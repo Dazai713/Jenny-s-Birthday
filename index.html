@@ -86,6 +86,87 @@
     transform: scale(0.95);
   }
 
+  /* Container Wrapper for Card & Enderman */
+  .card-container {
+    position: relative;
+    max-width: 440px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+
+  /* Minecraft Peeking Enderman */
+  .enderman {
+    position: absolute;
+    right: 12px;
+    top: 100px;
+    width: 70px;
+    height: 160px;
+    background: #121212;
+    z-index: 5; /* Behind card-frame */
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+    animation: peekEnderman 7s infinite ease-in-out;
+    cursor: pointer;
+  }
+
+  /* Enderman Head Details */
+  .enderman-eyes {
+    position: absolute;
+    top: 25px;
+    left: 8px;
+    display: flex;
+    gap: 18px;
+  }
+
+  .enderman-eye {
+    width: 16px;
+    height: 5px;
+    background: #e056fd;
+    box-shadow: 0 0 8px #d63031, 0 0 12px #e056fd;
+    position: relative;
+  }
+
+  .enderman-eye::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0;
+    width: 8px;
+    height: 5px;
+    background: #ffffff;
+  }
+
+  /* Ender Particles */
+  .ender-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #e056fd;
+    box-shadow: 0 0 6px #e056fd;
+    animation: enderFloat 2.5s infinite ease-out;
+  }
+  .ep1 { top: 15px; left: -5px; animation-delay: 0.2s; }
+  .ep2 { top: 60px; left: 15px; animation-delay: 0.9s; }
+  .ep3 { top: 110px; left: -8px; animation-delay: 1.6s; }
+
+  @keyframes peekEnderman {
+    0%, 100% {
+      transform: translateX(0); /* Hidden behind card */
+    }
+    35%, 65% {
+      transform: translateX(48px); /* Peeks out from behind right side */
+    }
+  }
+
+  @keyframes enderFloat {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-30px) scale(0.3); }
+  }
+
   /* Main Card Frame */
   .card-frame {
     z-index: 10;
@@ -93,7 +174,6 @@
     border: 5px solid #bae6fd !important;
     border-radius: 35px;
     padding: 30px 20px;
-    max-width: 440px;
     width: 100%;
     text-align: center;
     box-shadow: 0 20px 45px rgba(186, 230, 253, 0.7), 
@@ -267,38 +347,54 @@
   <div class="cloud cloud1"></div>
   <div class="cloud cloud2"></div>
 
-  <!-- Card Container -->
-  <div class="card-frame">
+  <!-- Main Outer Container -->
+  <div class="card-container">
 
-    <!-- Uploaded Repository Images with Cache Buster -->
-    <div class="sanrio-header">
-      <img class="sanrio-img" src="Cinnamoroll.webp?v=2" alt="Cinnamoroll">
-      <img class="sanrio-img kuromi-img" src="Kuromi.png?v=2" alt="Kuromi">
-    </div>
-
-    <h1>Happy Birthday Jenny!</h1>
-    <div class="subhead">A dreamy Cinnamoroll & Kuromi letter ☁️💜</div>
-
-    <!-- Closed Envelope View -->
-    <div class="envelope-box" id="closedEnvelope" onclick="unsealLetter(event)">
-      <div class="stamp-icon">💌</div>
-      <div class="open-text">Tap to Open Letter!</div>
-      <p style="color: #9b59b6 !important; font-size: 0.85rem; margin-top: 6px; font-weight: 600;">✨ Confetti & balloons inside ✨</p>
-    </div>
-
-    <!-- Opened Letter View -->
-    <div class="letter-content" id="openedLetter">
-      <div class="letter-title">
-        <span>☁️ Dearest Jenny, 💜</span>
-        <span>🎀</span>
+    <!-- Minecraft Enderman Peeking -->
+    <div class="enderman" title="Shhh... an Enderman is peeking! 👾">
+      <div class="enderman-eyes">
+        <div class="enderman-eye"></div>
+        <div class="enderman-eye"></div>
       </div>
-      <div class="letter-text" id="letterTextBody">
+      <div class="ender-particle ep1"></div>
+      <div class="ender-particle ep2"></div>
+      <div class="ender-particle ep3"></div>
+    </div>
+
+    <!-- Card Container Frame -->
+    <div class="card-frame">
+
+      <!-- Sanrio Images -->
+      <div class="sanrio-header">
+        <img class="sanrio-img" src="Cinnamoroll.webp?v=2" alt="Cinnamoroll">
+        <img class="sanrio-img kuromi-img" src="Kuromi.png?v=2" alt="Kuromi">
+      </div>
+
+      <h1>Happy Birthday Jenny!</h1>
+      <div class="subhead">A dreamy Cinnamoroll & Kuromi letter ☁️💜</div>
+
+      <!-- Closed Envelope View -->
+      <div class="envelope-box" id="closedEnvelope" onclick="unsealLetter(event)">
+        <div class="stamp-icon">💌</div>
+        <div class="open-text">Tap to Open Letter!</div>
+        <p style="color: #9b59b6 !important; font-size: 0.85rem; margin-top: 6px; font-weight: 600;">✨ Confetti & balloons inside ✨</p>
+      </div>
+
+      <!-- Opened Letter View -->
+      <div class="letter-content" id="openedLetter">
+        <div class="letter-title">
+          <span>☁️ Dearest Jenny, 💜</span>
+          <span>🎀</span>
+        </div>
+        <div class="letter-text" id="letterTextBody">
 Happy Birthday Jenny! 🎉
 
 I hope your special day is as sweet, soft, and comforting as Cinnamoroll floating through pastel clouds, with a cute touch of Kuromi's fun magic! 
 
 Thank you for being such an incredible friend. Wishing you a year ahead filled with happiness, sweet treats, and all your biggest dreams coming true! Have the absolute best birthday ever! ☁️🧁✨
+        </div>
       </div>
+
     </div>
 
   </div>
@@ -421,7 +517,7 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
     }
 
     function launchConfetti() {
-      const symbols = ['🎉', '☁️', '🎂', '💙', '✨', '🧁', '🎈', '💖', '💜'];
+      const symbols = ['🎉', '☁️', '🎂', '💙', '✨', '🧁', '🎈', '💖', '💜', '🟩'];
       for (let i = 0; i < 32; i++) {
         setTimeout(() => {
           const particle = document.createElement('div');
@@ -438,4 +534,3 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
   </script>
 </body>
 </html>
-
