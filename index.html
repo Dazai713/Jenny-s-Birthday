@@ -97,22 +97,20 @@
     z-index: 10;
   }
 
-  /* --- MINECRAFT ENDERMAN CHARACTER --- */
+  /* --- ENDERMAN HEAD ONLY --- */
   .enderman-wrapper {
     position: fixed;
-    left: -80px; /* Hidden off left screen edge */
-    bottom: 20%;
+    left: -65px; /* Fully hidden off left edge initially */
+    top: 38%;
     z-index: 99;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
     pointer-events: auto;
     cursor: pointer;
-    transition: transform 3.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+    /* Slow 7-second peek animation */
+    transition: transform 7s cubic-bezier(0.1, 0.7, 0.1, 1), opacity 0.2s ease;
   }
 
   .enderman-wrapper.peek-in {
-    transform: translateX(110px); /* Peeks onto screen */
+    transform: translateX(88px); /* Peeks just half the head out */
   }
 
   .enderman-wrapper.teleport-out {
@@ -120,63 +118,44 @@
     pointer-events: none;
   }
 
-  /* Head */
+  /* Head Design */
   .ender-head {
-    width: 60px;
-    height: 50px;
-    background: #0f0f14;
+    width: 64px;
+    height: 56px;
+    background: #0d0d12;
     border: 2px solid #1a1a24;
     position: relative;
-    box-shadow: inset 0 0 8px #000000;
+    box-shadow: inset 0 0 10px #000000;
   }
 
   /* Glowing Eyes */
   .ender-eyes {
     position: absolute;
-    top: 22px;
-    right: 4px;
+    top: 24px;
+    right: 2px;
     display: flex;
     gap: 12px;
   }
 
   .ender-eye {
-    width: 18px;
+    width: 20px;
     height: 5px;
     background: #cc44ff;
-    box-shadow: 0 0 10px #d63031, 0 0 14px #e056fd;
+    box-shadow: 0 0 10px #cc44ff, 0 0 16px #e056fd;
     position: relative;
   }
 
   .ender-eye::after {
     content: '';
     position: absolute;
-    left: 5px;
+    left: 6px;
     top: 0;
     width: 8px;
     height: 5px;
     background: #ffffff;
   }
 
-  /* Body & Skinny Arms */
-  .ender-body {
-    width: 35px;
-    height: 110px;
-    background: #111116;
-    position: relative;
-    margin-right: 5px;
-  }
-
-  .ender-arm {
-    position: absolute;
-    width: 8px;
-    height: 160px;
-    background: #0a0a0f;
-    right: -2px;
-    top: 0;
-    border-radius: 2px;
-  }
-
-  /* Ender Particles */
+  /* Ender Floating Particles */
   .ender-particle-box {
     position: absolute;
     width: 100%;
@@ -378,7 +357,7 @@
   <div class="cloud cloud1"></div>
   <div class="cloud cloud2"></div>
 
-  <!-- Enderman Character Peeking from Left -->
+  <!-- Enderman Head Only -->
   <div class="enderman-wrapper" id="enderman" onclick="teleportEnderman(true)">
     <div class="ender-head">
       <div class="ender-eyes">
@@ -386,17 +365,14 @@
         <div class="ender-eye"></div>
       </div>
     </div>
-    <div class="ender-body">
-      <div class="ender-arm"></div>
-    </div>
     <div class="ender-particle-box">
-      <div class="p-ender" style="top: 10px; left: -10px; animation-delay: 0.1s;"></div>
-      <div class="p-ender" style="top: 70px; left: 15px; animation-delay: 0.6s;"></div>
-      <div class="p-ender" style="top: 120px; left: -5px; animation-delay: 1.2s;"></div>
+      <div class="p-ender" style="top: 5px; left: -8px; animation-delay: 0.1s;"></div>
+      <div class="p-ender" style="top: 35px; left: 20px; animation-delay: 0.7s;"></div>
+      <div class="p-ender" style="top: -10px; left: 10px; animation-delay: 1.3s;"></div>
     </div>
   </div>
 
-  <!-- Card Container Container -->
+  <!-- Card Container -->
   <div class="card-container">
 
     <!-- Card Container Frame -->
@@ -570,7 +546,7 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
       }
     }
 
-    // --- ENDERMAN TIMING & TELEPORT SFX ---
+    // --- ENDERMAN TIMING & CLASSIC TELEPORT SFX ---
     let endermanTeleported = false;
 
     // Trigger peek 9 seconds after webpage loads
@@ -580,38 +556,53 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
           const enderEl = document.getElementById('enderman');
           enderEl.classList.add('peek-in');
 
-          // Vanish with teleport sound 4.5s after peeking
+          // Teleport out after completing the peek
           setTimeout(() => {
             if (!endermanTeleported) {
               teleportEnderman(false);
             }
-          }, 4500);
+          }, 8000);
         }
       }, 9000);
     });
 
+    // Realistic Minecraft Enderman Teleport Sound Synthesizer
     function playTeleportSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
+        
+        // Multi-layered oscillator for metallic / glitched screech effect
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        osc.type = 'sawtooth';
-        
-        // Pitch sweep mimicking Minecraft Enderman teleport
-        osc.frequency.setValueAtTime(280, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.35);
+        osc1.type = 'sawtooth';
+        osc2.type = 'square';
 
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        const now = ctx.currentTime;
 
-        osc.connect(gain);
+        // Classic Enderman "vwooop" pitch modulation
+        osc1.frequency.setValueAtTime(650, now);
+        osc1.frequency.exponentialRampToValueAtTime(140, now + 0.18);
+        osc1.frequency.exponentialRampToValueAtTime(450, now + 0.45);
+
+        osc2.frequency.setValueAtTime(320, now);
+        osc2.frequency.exponentialRampToValueAtTime(80, now + 0.18);
+        osc2.frequency.exponentialRampToValueAtTime(220, now + 0.45);
+
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
         gain.connect(ctx.destination);
 
-        osc.start();
-        osc.stop(ctx.currentTime + 0.35);
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.45);
+        osc2.stop(now + 0.45);
       } catch (e) {
-        // Fallback if audio context isn't allowed without user click
+        // Fallback for browsers blocking audio before interaction
       }
     }
 
@@ -622,14 +613,14 @@ Thank you for being such an incredible friend. Wishing you a year ahead filled w
       const enderEl = document.getElementById('enderman');
       playTeleportSound();
 
-      // Spawn burst of purple Ender particles
+      // Burst of purple Ender particles
       const rect = enderEl.getBoundingClientRect();
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 22; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
         p.innerText = '✨';
-        p.style.left = `${rect.left + Math.random() * 60}px`;
-        p.style.top = `${rect.top + Math.random() * 100}px`;
+        p.style.left = `${rect.left + Math.random() * 50}px`;
+        p.style.top = `${rect.top + Math.random() * 50}px`;
         p.style.fontSize = '16px';
         document.body.appendChild(p);
         setTimeout(() => p.remove(), 1000);
